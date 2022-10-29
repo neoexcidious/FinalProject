@@ -91,3 +91,10 @@ function love.draw()
     end
 end
 
+function love.keypressed(key)
+    -- jump function
+    if key == "up" or key == "w" then
+        player:jump()
+    end
+end
+

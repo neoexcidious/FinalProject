@@ -20,7 +20,7 @@ function Player:update(dt)
         self.x = self.x + self.speed * dt
     end
     
-    -- Check if mid-air
+    -- Check if mid-air to prevent jump while falling
     if self.last.y ~= self.y then
         self.canJump = false
     end    
@@ -37,3 +37,10 @@ function Player:jump()
     end
 end
 
+-- Allow jump
+function Player:collide(obj, direction)
+    Player.super.collide(self, obj, direction)
+    if direction == "bottom" then
+        self.canJump = true
+    end
+end

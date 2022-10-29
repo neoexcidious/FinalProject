@@ -40,7 +40,7 @@ end
 
 function Entity:AlignedVertically(obj)
     -- If vertically aligned to other object, return true
-    return self.last.y < obj.last.y and self.last.y + self.height > obj.last.y
+    return self.last.y < obj.last.y + obj.height and self.last.y + self.height > obj.last.y
 end
 
 function Entity:AlignedHorizontally(obj)
@@ -67,27 +67,19 @@ function Entity:resolveCollision(obj)
         -- Check alignment, push back accordingly
         if self:AlignedVertically(obj) then
             if self.x + self.width / 2 < obj.x + obj.width / 2 then
-                -- push to the right of the player and left of the wall
-                local push = self.x + self.width - e.x
-                self.x = self.x - push
+                -- push right of the player and left of the wall
+                self:collide(obj, "right")
             else
-                -- push to the left of the player and right of the wall
-                local push = obj.x + obj.width - self.x
-                self.x = self.x + push
+                -- push left of the player and right of the wall
+                self:collide(obj, "left")
             end
-
         elseif self:AlignedHorizontally(obj) then
             if self.y + self.height / 2 < obj.y + obj.height / 2 then
                 -- push to bottom of player and top of wall
-                local push = self.y + self.height - obj.y
-                self.y = self.y - push
-                -- this also means player's bottom is pushing a wall
-                -- so we have to stop it from falling
-                self.gravity = 0
+                self:collide(obj, "bottom")                
             else
                 -- push to bottom of wall, top of player
-                local push = obj.y + obj.height - self.y
-                self.y = self.y + push
+                self:collide(e, "top")
             end
         end
         -- Collision detected
@@ -95,4 +87,23 @@ function Entity:resolveCollision(obj)
     end
     -- No collision detected
     return false
+end
+
+function Entity:collide(obj, direction)
+    if direction == "right" then
+        local push = self.x + self.width - obj.x
+        self.x = self.x - push
+    elseif direction == "left" then
+        local push = obj.x + obj.width - self.x
+        self.x = self.x + push
+    elseif direction == "bottom" then
+        local push = self.y + self.height - obj.y
+        self.y = self.y - push
+        -- this also means player's bottom is pushing a wall
+        -- so we have to stop it from falling
+        self.gravity = 0
+    elseif direction == "top" then
+        local push = obj.y + obj.height - self.y
+        self.y = self.y + push
+    end
 end
