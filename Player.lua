@@ -7,6 +7,7 @@ function Player:new(x, y)
     Player.super.new(self, x, y, "drop.png")
     self.speed = 200
     self.canJump = false
+    self.strength = 10
 end
 
 function Player:update(dt)

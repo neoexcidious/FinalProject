@@ -26,7 +26,7 @@ end
 function Entity:update(dt)
     self.last.x = self.x
     self.last.y = self.y
-
+    -- Reset strength
     self.tempStrength = self.strength
     -- Increase gravity based on weight
     self.gravity = self.gravity + self.weight * dt
@@ -57,8 +57,13 @@ function Entity: checkCollision(obj)
 end
 
 function Entity:resolveCollision(obj)
-    -- If collided
+    -- Check for collision
+    if self.tempStrength > obj.tempStrength then
+        return obj:resolveCollision(self)        
+    end
+
     if self:checkCollision(obj) then
+        self.tempStrength = obj.tempStrength
         -- Check alignment, push back accordingly
         if self:AlignedVertically(obj) then
             if self.x + self.width / 2 < obj.x + obj.width / 2 then
@@ -85,5 +90,9 @@ function Entity:resolveCollision(obj)
                 self.y = self.y + push
             end
         end
+        -- Collision detected
+        return true
     end
+    -- No collision detected
+    return false
 end

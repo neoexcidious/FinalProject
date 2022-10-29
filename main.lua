@@ -37,27 +37,46 @@ function love.load()
 end
 
 function love.update(dt)  
+    -- Update objects
     for i,v in ipairs(objects) do
         v:update(dt)
     end
+
+    -- Update walls
+    for i,v in ipairs(walls) do
+        v:update(dt)
+    end
+
     local loop = true
     local limit = 0
 
     while loop do
+        -- While no collision happens
         loop = false
-        limit = limit + 1
+
+        -- Prevent player getting stuck in infinite loop
+        limit = limit + 1        
         if limit > 100 then
             break
         end
-        -- check wall collision on each object
+
+        -- Check wall collision on each object
         for i = 1, #objects - 1 do
-            for j = i + 1, # objects do
+            for j = i + 1, #objects do
                 local collision = objects[i]: resolveCollision(objects[j])
                 if collision then
                     loop = true
                 end
             end
-        end    
+        end
+        for i, wall in ipairs(walls) do
+            for j, object in ipairs(objects) do
+                local collision = object:resolveCollision(wall)    
+                if collision then
+                    loop = true
+                end
+            end
+        end
     end
 end
 
