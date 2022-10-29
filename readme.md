@@ -1,4 +1,4 @@
-# PROJECT I HAVE NO IDEA
+# GAME TITLE HERE
 #### Video Demo: <insert url>
 #### Description: Does things
 TODO Several hundred words across multiple paragraphs
@@ -11,6 +11,7 @@ Use dynamic enemies that move from left to right of window, like a heated vent o
 16th chapter into Sheepolution's guide and things are getting really math heavy. Making an object follow the mouse involves using vectors, radians, sine and cosine.
 Object collision is very complex, though there are some pre-made libraries I can use, now that at least I understand the fundamentals of how it works.
 Back to game dynamic ideas, cold vent or icy surface that allows us to shoot icicles.
+At least ipairs is starting to feel normal.
+Have to get water shaped spritesheet from FreePik.com and code the sprite animation
 
-
-Use BFXR for sound later on
+Use BFXR for sound later on ?

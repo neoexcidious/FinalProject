@@ -3,11 +3,10 @@ Player = Object:extend()
 
 function Player:new()
     
-    -- Loaded free use image from Pixabay: https://pixabay.com/photos/water-drop-wave-wet-liquid-splash-5099248/
     self.image = love.graphics.newImage("drop.png")
     self.x = 10
     self.y = 400
-    self.width = self.image:getWidth()
+    self.size = 20 
     self.speed = 200
 end
 
@@ -23,11 +22,12 @@ function Player:update(dt)
 
     if self.x < 0 then
         self.x = 0
-    elseif self.x + self.width > window_width then
-        self.x = window_width - self.width
+    elseif self.x + self.size > window_width then
+        self.x = window_width - self.size
     end
 end
 
 function Player:draw()
-    love.graphics.draw(self.image, self.x, self.y)
+    love.graphics.circle("fill", self.x, self.y, self.size)
+    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.image:getWidth() / 2, self.image:getHeight() / 2)
 end
