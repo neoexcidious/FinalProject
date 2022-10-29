@@ -13,11 +13,25 @@ function Entity:new(x, y, img)
     self.last = {}
     self.last.x = self.x
     self.last.y = self.y
+
+    -- Set strength of objects to determine what can get pushed
+    self.strength = 0
+    self.tempStrength = 0
+    
+    -- Make objects fall
+    self.gravity = 0
+    self.weight = 400
 end
 
 function Entity:update(dt)
     self.last.x = self.x
     self.last.y = self.y
+
+    self.tempStrength = self.strength
+    -- Increase gravity based on weight
+    self.gravity = self.gravity + self.weight * dt
+    -- Drop height (increase y)
+    self.y = self.y + self.gravity * dt
 end
 
 function Entity:draw()
@@ -62,6 +76,9 @@ function Entity:resolveCollision(obj)
                 -- push to bottom of player and top of wall
                 local push = self.y + self.height - obj.y
                 self.y = self.y - push
+                -- this also means player's bottom is pushing a wall
+                -- so we have to stop it from falling
+                self.gravity = 0
             else
                 -- push to bottom of wall, top of player
                 local push = obj.y + obj.height - self.y

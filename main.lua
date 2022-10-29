@@ -8,57 +8,67 @@ function love.load()
     player = Player(30, 390)
 
     objects = {}
-    table.insert(object, player)
-    -- Load tileset
-    -- From https://free-game-assets.itch.io/free-industrial-zone-tileset-pixel-art
-    image = love.graphics.newImage("wall.jpg")
-    -- Get tileset dimensions
-    local image_width = image:getWidth()
-    local image_height = image:getHeight()
-    -- Divide tileset into each tile
-    width = image_width - 4
-    height = image_height -4 
+    table.insert(objects, player)
 
-    -- Create quads to extract each tile
-    quads = {}
+    walls = {}
 
-    for i = 0, 1 do
-        for j = 0, 2 do
-            table.insert(quads, love.graphics.newQuad(
-                1 + j * (width),
-                1 + i * (height),
-                width, height, image_width, image_height))
-        end
-    end
-    tilemap = {
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}    
+    map = {
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1},
+        {1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}  
     }
 
-end
-
-function love.update(dt)  
-    player:update(dt)
-    wall:update(dt)
-    player:resolveCollision(wall)
-end
-
-function love.draw()
-    for i, row in ipairs(tilemap) do
-        for j, tile in ipairs(row) do
-            -- build blocks if not 0
-            if tile ~= 0 then
-                love.graphics.draw(image, quads[tile], (j - 1) * width, (i - 0.6) * height, 0, 1, 1)
+    for i, v in ipairs(map) do 
+        for j, w in ipairs(v) do
+            if w == 1 then
+                table.insert(walls, Wall((j-1) * 50, (i-1) * 50))
             end
         end
     end
-    player:draw()
+end
+
+function love.update(dt)  
+    for i,v in ipairs(objects) do
+        v:update(dt)
+    end
+    local loop = true
+    local limit = 0
+
+    while loop do
+        loop = false
+        limit = limit + 1
+        if limit > 100 then
+            break
+        end
+        -- check wall collision on each object
+        for i = 1, #objects - 1 do
+            for j = i + 1, # objects do
+                local collision = objects[i]: resolveCollision(objects[j])
+                if collision then
+                    loop = true
+                end
+            end
+        end    
+    end
+end
+
+function love.draw()
+    -- Draw objects
+    for i, v in ipairs(objects) do
+        v:draw()
+    end
+    -- Draw walls
+    for i, v in ipairs(walls) do
+        v:draw()
+    end
 end
 
