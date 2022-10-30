@@ -26,16 +26,16 @@ function Enemy:update(dt)
     local loop = false
     local distance = math.abs(player.x - self.x)
     print(distance)
-    if distance <= 200 then
+    if distance <= 250 then
         loop = true
-    elseif distance > 200 then
+    elseif distance > 250 then
         loop = false
     end
     
     while loop do
         loop = false
-        table.insert(BucketOfFire, Fire(self.x, self.y))
-        if distance <= 200 then          
+        table.insert(BucketOfFire, Fire(self.x + (self.width / 2), self.y + (self.height / 2))) 
+        if distance <= 250 then          
             break
         end
     end
