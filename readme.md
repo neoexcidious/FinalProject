@@ -21,7 +21,8 @@ First enemy done, will likely have to adjust code when I want to add more though
 Had to figure out a while loop to make the enemy spit out fire constantly while the player is nearby. Learned that Love2D does not have safeguards against infinite loops and will crash your game without telling you what went wrong - unlike the C and Python programs we've ran in the course. Though those might have been hard coded into the CS50 library.
 Need to make the fire disappear once it hits the wall underneath, which involves checking collision. The constant fire is being generated using a table, so I could not add it to the list of objects that we have constantly checking collision on. Have to manually resolve the collision for the fire drops in order to kill them on contact.
 Then, I have to check collision with the player and damage the latter on contact. TBD what that will entail.
-
+Decided to keep the camera library for the fade-to-black function it has.
+Completed player collision with fire, applied fade
 
 
 

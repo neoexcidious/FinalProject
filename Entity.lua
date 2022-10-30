@@ -57,7 +57,7 @@ function Entity: checkCollision(obj)
 end
 
 function Entity:resolveCollision(obj)
-    -- Check for collision
+    -- Check strength
     if self.tempStrength > obj.tempStrength then
         return obj:resolveCollision(self)        
     end
@@ -89,6 +89,7 @@ function Entity:resolveCollision(obj)
     return false
 end
 
+-- Checks direction of collision and pushes entity back accordingly
 function Entity:collide(obj, direction)
     if direction == "right" then
         local push = self.x + self.width - obj.x

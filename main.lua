@@ -13,6 +13,10 @@ function love.load()
     player = Player(30, 390)
     enemy = Enemy(600, 350)
     BucketOfFire = {}
+    gameOver = false
+
+    -- Get window dimensions
+    width, height = love.graphics.getDimensions()
     
     -- Set camera parameters
     camera = Camera()
@@ -20,7 +24,7 @@ function love.load()
     camera = Camera(w/2, h/2, w, h)
     camera:setDeadzone(40, h/2 - 40, w - 80, 80)
     
-    -- Debugging purposes only
+    -- Debugging purposes only                                  <<< Remove this
     camera.draw_deadzone = true
 
     creatures = {}
@@ -61,11 +65,7 @@ function love.update(dt)
     -- Update camera
     camera:update(dt)
     camera:follow(player.x, player.y)
-    -- Update fire
-    for i,v in ipairs(BucketOfFire) do
-        v:update(dt)
-    end
-    
+      
     -- Update creatures
     for i,v in ipairs(creatures) do
         v:update(dt)
@@ -80,7 +80,19 @@ function love.update(dt)
     -- Update walls
     for i,v in ipairs(walls) do
         v:update(dt)
-    end
+    end    
+
+    -- Update fire
+    for i,v in ipairs(BucketOfFire) do
+        v:update(dt)
+        v:checkCollision(player)
+        if v.dead then
+            table.remove(BucketOfFire, i)
+            camera:fade(0.1, {0, 0, 0, 1})
+            gameOver = true
+        end
+        
+      end
 
     local loop = true
     local limit = 0
@@ -95,7 +107,7 @@ function love.update(dt)
             break
         end
 
-        -- Check collision between all creatures
+        -- Resolve collision between all creatures
         for i = 1, #creatures - 1 do
             for j = i + 1, #creatures do
                 local collision = creatures[i]: resolveCollision(creatures[j])
@@ -103,7 +115,7 @@ function love.update(dt)
                     loop = true
                 end
             end
-        end
+        end        
 
          -- Check wall collision on each object
         for i, wall in ipairs(walls) do
@@ -112,7 +124,7 @@ function love.update(dt)
                 if collision then
                     loop = true
                 end
-            end
+            end           
         end
     end
 end
@@ -133,6 +145,11 @@ function love.draw()
     end
     camera:detach()
     camera:draw()
+    
+    -- If player died
+    if gameOver then love.graphics.print("Game Over", (width / 2), (height / 2))
+        return
+    end
 end
 
 local isOn = false
