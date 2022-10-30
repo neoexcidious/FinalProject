@@ -23,9 +23,9 @@ function love.load()
     -- Debugging purposes only
     camera.draw_deadzone = true
 
-    objects = {}
-    table.insert(objects, player)
-    table.insert(objects, enemy)
+    creatures = {}
+    table.insert(creatures, player)
+    table.insert(creatures, enemy)
 
     walls = {}
 
@@ -58,7 +58,7 @@ function love.load()
 end
 
 function love.update(dt)  
-    -- Update objects
+    -- Update camera
     camera:update(dt)
     camera:follow(player.x, player.y)
     -- Update fire
@@ -66,13 +66,14 @@ function love.update(dt)
         v:update(dt)
     end
     
-    for i,v in ipairs(objects) do
+    -- Update creatures
+    for i,v in ipairs(creatures) do
         v:update(dt)
     end
-    -- Check collision between all objects without duplicating
-    for i = 1, #objects - 1 do
-        for j = i + 1, #objects do
-            objects[i]:resolveCollision(objects[j])
+    -- Check collision between all creatures without duplicating
+    for i = 1, #creatures - 1 do
+        for j = i + 1, #creatures do
+            creatures[i]:resolveCollision(creatures[j])
         end
     end
 
@@ -94,17 +95,19 @@ function love.update(dt)
             break
         end
 
-        -- Check wall collision on each object
-        for i = 1, #objects - 1 do
-            for j = i + 1, #objects do
-                local collision = objects[i]: resolveCollision(objects[j])
+        -- Check collision between all creatures
+        for i = 1, #creatures - 1 do
+            for j = i + 1, #creatures do
+                local collision = creatures[i]: resolveCollision(creatures[j])
                 if collision then
                     loop = true
                 end
             end
         end
+
+         -- Check wall collision on each object
         for i, wall in ipairs(walls) do
-            for j, object in ipairs(objects) do
+            for j, object in ipairs(creatures) do
                 local collision = object:resolveCollision(wall)    
                 if collision then
                     loop = true
@@ -116,8 +119,8 @@ end
 
 function love.draw()
     camera:attach()
-    -- Draw objects
-    for i, v in ipairs(objects) do
+    -- Draw creatures
+    for i, v in ipairs(creatures) do
         v:draw()
     end
     -- Draw walls
