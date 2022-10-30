@@ -9,5 +9,4 @@ function Wall:new(x, y)
     self.strength = 100
     -- Walls should not fall
     self.weight = 0
-
 end

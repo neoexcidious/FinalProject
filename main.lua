@@ -1,11 +1,19 @@
 
 function love.load()
-    -- Load Objects
+    -- Load components
     Object = require "classic"
+    Camera = require "camera"
     require "entity"
     require "player"
     require "walls"
     player = Player(30, 390)
+    
+    -- Set camera parameters
+    camera = Camera()
+    camera:setFollowStyle("CUSTOM")
+    local w, h = 800, 600
+    camera = Camera (w/2, h/2, w, h)
+    camera:setDeadzone(40, h/2, w - 80, 80)    
 
     objects = {}
     table.insert(objects, player)
@@ -19,10 +27,10 @@ function love.load()
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1},
         {1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}  
     }
@@ -38,6 +46,8 @@ end
 
 function love.update(dt)  
     -- Update objects
+    camera:update(dt)
+    camera:follow(player.x, player.y)
     for i,v in ipairs(objects) do
         v:update(dt)
     end
@@ -81,6 +91,7 @@ function love.update(dt)
 end
 
 function love.draw()
+    camera:attach()
     -- Draw objects
     for i, v in ipairs(objects) do
         v:draw()
@@ -89,12 +100,27 @@ function love.draw()
     for i, v in ipairs(walls) do
         v:draw()
     end
+    camera:detach()
+    camera:draw()
 end
 
 function love.keypressed(key)
     -- jump function
     if key == "up" or key == "w" then
         player:jump()
+    elseif key == "escape" then
+        menu()
     end
 end
 
+function menu()
+    local is_up = false
+    
+    if is_up == false then
+        camera:fade(1, {0, 0, 0, 1})
+        is_up = true
+    else
+        camera:fade(1, {0, 0, 0, 0})
+        is_up = false
+    end
+end

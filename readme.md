@@ -10,9 +10,11 @@ Initially wanted to make a water-like object, but that is too difficult to anima
 Use dynamic enemies that move from left to right of window, like a heated vent or lava pipe that moves
 16th chapter into Sheepolution's guide and things are getting really math heavy. Making an object follow the mouse involves using vectors, radians, sine and cosine.
 Object collision is very complex, though there are some pre-made libraries I can use, now that at least I understand the fundamentals of how it works.
-Watched CS50's Colton's seminar to gain some more understanding into Lua and Love2d
-At least ipairs is starting to feel normal.
+Watched Colton Ogden's CS50 Falling in Love with Lua to gain some more understanding into Lua and Love2d
 Obtained some free tileset images from itch.io
+Building the code for a camera that works well myself could take weeks at my level. 
+After doing some research, I decided to import Stalker-X's free-use camera library for Love2d, as this would be akin to importing a library in C or Python and will allow me to focus on building the actual game.
+
 
 
 Use BFXR for sound later on ?

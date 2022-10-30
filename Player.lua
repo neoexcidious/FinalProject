@@ -26,10 +26,6 @@ function Player:update(dt)
     end    
 end
 
-function Player:draw()
-    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.image:getWidth() / 2, self.image:getHeight() / 2)
-end
-
 function Player:jump()
     if self.canJump then
         self.gravity = -300
