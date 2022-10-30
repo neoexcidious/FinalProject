@@ -8,6 +8,7 @@ function love.load()
     require "walls"
     require "enemy"
     require "fire"
+    require "food"
 
     -- Initialize primary objects
     player = Player(30, 390)
@@ -15,24 +16,30 @@ function love.load()
     BucketOfFire = {}
     gameOver = false
 
+    -- Create food table
+    foodBucket = {}
+
     -- Get window dimensions
     width, height = love.graphics.getDimensions()
     
-    -- Set camera parameters
+    -- Set camera parameters                        <<< Fix this
     camera = Camera()
     local w, h = 800, 600
     camera = Camera(w/2, h/2, w, h)
     camera:setDeadzone(40, h/2 - 40, w - 80, 80)
     
-    -- Debugging purposes only                                  <<< Remove this
-    camera.draw_deadzone = true
-
-    creatures = {}
+    -- Debugging purposes only                       <<< Remove this when done
+    camera.draw_deadzone = true  
+    
+    -- Create table of creatures
+    creatures = {}    
     table.insert(creatures, player)
     table.insert(creatures, enemy)
 
+    -- Create separate table for walls to avoid checking collision where not needed
     walls = {}
-
+    
+    -- Create tilemap
     map = {
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -82,18 +89,24 @@ function love.update(dt)
         v:update(dt)
     end    
 
-    -- Update fire
+    -- Eat food
+    for i,v in ipairs(foodBucket) do
+        v:update(dt)
+        v:checkCollision(player)
+        print("Ate food!")
+    end
+
+    -- Update fire    <<< gameOver needs to be changed when adding wall collision check
     for i,v in ipairs(BucketOfFire) do
         v:update(dt)
         v:checkCollision(player)
         if v.dead then
             table.remove(BucketOfFire, i)
-            camera:fade(0.1, {0, 0, 0, 1})
             gameOver = true
-        end
-        
+        end        
       end
 
+    -- Collision checks
     local loop = true
     local limit = 0
 
@@ -115,8 +128,8 @@ function love.update(dt)
                     loop = true
                 end
             end
-        end        
-
+        end
+        
          -- Check wall collision on each object
         for i, wall in ipairs(walls) do
             for j, object in ipairs(creatures) do
@@ -128,6 +141,7 @@ function love.update(dt)
         end
     end
 end
+
 
 function love.draw()
     camera:attach()
@@ -143,15 +157,25 @@ function love.draw()
     for i, v in ipairs(BucketOfFire) do
         v:draw()
     end
+    -- Draw food
+    for i, v in ipairs(foodBucket) do
+        v:draw()
+    end
+    
     camera:detach()
     camera:draw()
     
     -- If player died
-    if gameOver then love.graphics.print("Game Over", (width / 2), (height / 2))
+    if gameOver then
+        camera:fade(0.1, {0, 0, 0, 1})
+        love.graphics.print("Game Over", (width / 2), (height / 2))
         return
     end
 end
 
+-- Controls Mapping
+
+-- Check if Menu is up
 local isOn = false
 
 function love.keypressed(key)

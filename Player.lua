@@ -8,6 +8,7 @@ function Player:new(x, y)
     self.speed = 200
     self.canJump = false
     self.strength = 10
+    self.dead = false
 end
 
 function Player:update(dt)
@@ -18,12 +19,18 @@ function Player:update(dt)
         self.x = self.x - self.speed * dt
     elseif love.keyboard.isDown("right") or love.keyboard.isDown("d") then
         self.x = self.x + self.speed * dt
-    end
-    
+    end    
     -- Check if mid-air to prevent jump while falling
     if self.last.y ~= self.y then
         self.canJump = false
-    end    
+    end
+    
+    -- Death conditions
+    
+    -- Check if fell off
+    if self.y > 800 then
+        gameOver = true
+    end
 end
 
 function Player:jump()

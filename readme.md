@@ -23,6 +23,7 @@ Need to make the fire disappear once it hits the wall underneath, which involves
 Then, I have to check collision with the player and damage the latter on contact. TBD what that will entail.
 Decided to keep the camera library for the fade-to-black function it has.
 Completed player collision with fire, applied fade
+Working on adding functionality to eat food.
 
 
 
