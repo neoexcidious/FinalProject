@@ -14,11 +14,15 @@ Watched Colton Ogden's CS50 Falling in Love with Lua to gain some more understan
 Obtained some free tileset images from itch.io
 After doing some research, I decided to import Stalker-X's free-use camera library for Love2d, as this would be akin to importing a library in C or Python and will allow me to focus on building the actual game.
 May switch back to translate for camera
-
 Making collidable enemy which is throwing errors, have to debug.
 Found error, typo
+Have to make enemy move back and forth, have to do something similar to Sheepolution's chapter 14 but with fixed coordinates rather than window width.
+First enemy done, will likely have to adjust code when I want to add more though.
+Had to figure out a while loop to make the enemy spit out fire constantly while the player is nearby. Learned that Love2D does not have safeguards against infinite loops and will crash your game without telling you what went wrong - unlike the C and Python programs we've ran in the course. Though those might have been hard coded into the CS50 library.
+Need to make the fire disappear once it hits the wall underneath, which involves checking collision. The constant fire is being generated using a table, so I could not add it to the list of objects that we have constantly checking collision on. Have to manually resolve the collision for the fire drops in order to kill them on contact.
+Then, I have to check collision with the player and damage the latter on contact. TBD what that will entail.
 
-Have to make enemy move back and forth, have to do something similar to Sheepolution's chapter 14 but with fixed coordinates rather than window width
+
 
 
 Use BFXR for sound later on ?
