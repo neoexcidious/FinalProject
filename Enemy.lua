@@ -23,10 +23,14 @@ function Enemy:update(dt)
     end
 
     -- Shoot fire while player is near
-    local loop = true
+    local loop = false
     local distance = math.abs(player.x - self.x)
     print(distance)
-
+    if distance <= 200 then
+        loop = true
+    elseif distance > 200 then
+        loop = false
+    end
     
     while loop do
         loop = false
