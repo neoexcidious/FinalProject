@@ -6,33 +6,46 @@ function love.load()
     require "entity"
     require "player"
     require "walls"
+    require "enemy"
+    require "fire"
+
+    -- Initialize primary objects
     player = Player(30, 390)
+    enemy = Enemy(600, 350)
+    BucketOfFire = {}
     
     -- Set camera parameters
     camera = Camera()
-    camera:setFollowStyle("CUSTOM")
     local w, h = 800, 600
-    camera = Camera (w/2, h/2, w, h)
-    camera:setDeadzone(40, h/2, w - 80, 80)    
+    camera = Camera(w/2, h/2, w, h)
+    camera:setDeadzone(40, h/2 - 40, w - 80, 80)
+    
+    -- Debugging purposes only
+    camera.draw_deadzone = true
 
     objects = {}
     table.insert(objects, player)
+    table.insert(objects, enemy)
 
     walls = {}
 
     map = {
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1},
-        {1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}  
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1},
+        {1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}  
     }
 
     for i, v in ipairs(map) do 
@@ -48,8 +61,19 @@ function love.update(dt)
     -- Update objects
     camera:update(dt)
     camera:follow(player.x, player.y)
+    -- Update fire
+    for i,v in ipairs(BucketOfFire) do
+        v:update(dt)
+    end
+    
     for i,v in ipairs(objects) do
         v:update(dt)
+    end
+    -- Check collision between all objects without duplicating
+    for i = 1, #objects - 1 do
+        for j = i + 1, #objects do
+            objects[i]:resolveCollision(objects[j])
+        end
     end
 
     -- Update walls
@@ -100,27 +124,25 @@ function love.draw()
     for i, v in ipairs(walls) do
         v:draw()
     end
+    -- Draw fire
+    for i, v in ipairs(BucketOfFire) do
+        v:draw()
+    end
     camera:detach()
     camera:draw()
 end
+
+local isOn = false
 
 function love.keypressed(key)
     -- jump function
     if key == "up" or key == "w" then
         player:jump()
-    elseif key == "escape" then
-        menu()
-    end
-end
-
-function menu()
-    local is_up = false
-    
-    if is_up == false then
+    elseif key == "escape" and isOn == false then
         camera:fade(1, {0, 0, 0, 1})
-        is_up = true
-    else
+        isOn = true
+    elseif key == "escape" and isOn == true then
         camera:fade(1, {0, 0, 0, 0})
-        is_up = false
+        isOn = false
     end
 end

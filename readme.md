@@ -12,9 +12,13 @@ Use dynamic enemies that move from left to right of window, like a heated vent o
 Object collision is very complex, though there are some pre-made libraries I can use, now that at least I understand the fundamentals of how it works.
 Watched Colton Ogden's CS50 Falling in Love with Lua to gain some more understanding into Lua and Love2d
 Obtained some free tileset images from itch.io
-Building the code for a camera that works well myself could take weeks at my level. 
 After doing some research, I decided to import Stalker-X's free-use camera library for Love2d, as this would be akin to importing a library in C or Python and will allow me to focus on building the actual game.
+May switch back to translate for camera
 
+Making collidable enemy which is throwing errors, have to debug.
+Found error, typo
+
+Have to make enemy move back and forth, have to do something similar to Sheepolution's chapter 14 but with fixed coordinates rather than window width
 
 
 Use BFXR for sound later on ?

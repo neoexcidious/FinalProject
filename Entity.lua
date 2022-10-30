@@ -79,7 +79,7 @@ function Entity:resolveCollision(obj)
                 self:collide(obj, "bottom")                
             else
                 -- push to bottom of wall, top of player
-                self:collide(e, "top")
+                self:collide(obj, "top")
             end
         end
         -- Collision detected
