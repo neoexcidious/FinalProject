@@ -100,8 +100,7 @@ function love.update(dt)
     for i,v in ipairs(BucketOfFire) do
         v:update(dt)
         v:checkCollision(player)
-        if v.dead then
-            table.remove(BucketOfFire, i)
+        if player.dead then
             gameOver = true
         end        
       end
@@ -137,7 +136,17 @@ function love.update(dt)
                 if collision then
                     loop = true
                 end
-            end           
+            end
+            for k, bullet in ipairs(BucketOfFire) do
+                local collision = bullet:checkCollision(wall)
+                if collision then
+                    loop = true
+                    bullet.dead = true
+                end
+                if bullet.dead then
+                    table.remove(BucketOfFire, i)
+                end
+            end
         end
     end
 end

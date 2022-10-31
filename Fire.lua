@@ -22,6 +22,9 @@ end
 function Fire:checkCollision(obj)
     if Fire.super.checkCollision(self, obj) then
         self.dead = true
+        if obj == player then
+            player.dead = true
+        end
     end
 end
 
