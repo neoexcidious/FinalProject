@@ -92,7 +92,12 @@ function love.update(dt)
     for i,v in ipairs(foodBucket) do
         v:update(dt)
         v:checkCollision(player)
-    end
+        for i = #foodBucket, 1, -1 do
+            if foodBucket[i].eaten then
+                table.remove(foodBucket, i)
+            end
+        end
+    end    
 
     -- Update walls
     for i,v in ipairs(walls) do
