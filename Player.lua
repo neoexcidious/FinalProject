@@ -9,6 +9,7 @@ function Player:new(x, y)
     self.canJump = false
     self.strength = 10
     self.dead = false
+    self.size = 10
 end
 
 function Player:update(dt)

@@ -1,10 +1,10 @@
 
 Food = Entity:extend()
 
-function Food:new()
+function Food:new(x, y)
     self.image = love.graphics.newImage("dollar.png")  -- <<< Change picture
-    self.x = math.random(100, 650)
-    self.y = math.random(320, 380)
+    self.x = x
+    self.y = y
     self.width = self.image:getWidth()
     self.height = self.image:getHeight()
     self.size = 10
@@ -12,17 +12,18 @@ function Food:new()
 end
 
 function Food:update(dt)
-    for i = 1, 5 do
-        table.insert(foodBucket, Food(self.x, self.y))
-    end
+
 end
 
 function Food:draw()
-    love.graphics.draw(self.image, self.x, self.y)    
+    love.graphics.draw(self.image, self.x, self.y)
 end
 
 function Food:checkCollision(obj)
     if Food.super.checkCollision(self, obj) then
         self.eaten = true
+        if obj == player then
+            player.size = player.size + 1
+        end
     end
 end
