@@ -9,7 +9,7 @@ function Player:new(x, y)
     self.canJump = false
     self.strength = 10
     self.dead = false
-    self.size = 10
+    self.health = 1
 end
 
 function Player:update(dt)
@@ -27,11 +27,10 @@ function Player:update(dt)
     end
     
     -- Death conditions
-    
-    -- Check if fell off
-    if self.y > 800 then
+    if player.health == 0 or self.y > 800 then
         gameOver = true
     end
+
 end
 
 function Player:jump()

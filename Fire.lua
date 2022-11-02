@@ -19,11 +19,13 @@ function Fire:draw()
     love.graphics.draw(self.image, self.x, self.y)
 end
 
+-- Check for damage to player
 function Fire:checkCollision(obj)
     if Fire.super.checkCollision(self, obj) then
         self.dead = true
         if obj == player then
-            player.dead = true
+            player.x = player.last.x - 10
+            player.health = player.health - 1
         end
     end
 end

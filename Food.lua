@@ -23,7 +23,7 @@ function Food:checkCollision(obj)
     if Food.super.checkCollision(self, obj) then
         self.eaten = true
         if obj == player then
-            player.size = player.size + 1
+            player.health = player.health + 1
         end
     end
 end
