@@ -11,7 +11,7 @@ function love.load()
     require "food"
 
     -- Initialize primary objects
-    player = Player(30, 390)
+    player = Player(150, 250)
     enemy = Enemy(600, 350)
 
     BucketOfFire = {}
@@ -37,7 +37,7 @@ function love.load()
     
     -- Create table of creatures
     creatures = {}    
-    table.insert(creatures, player)
+    -- table.insert(creatures, player)   <<< Drawable expected, got quad when this is on
     table.insert(creatures, enemy)
 
     -- Create separate table for walls to avoid checking collision where not needed
@@ -166,6 +166,7 @@ function love.draw()
     for i, v in ipairs(creatures) do
         v:draw()
     end
+    love.graphics.draw(player.image, frames[math.floor(currentFrame)], player.x, player.y)
     -- Draw walls
     for i, v in ipairs(walls) do
         v:draw()
