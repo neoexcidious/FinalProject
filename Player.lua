@@ -53,15 +53,11 @@ function Player:update(dt)
     end
 
     -- Animation
-    currentFrame = currentFrame + 10 * dt
+    currentFrame = currentFrame + 5 * dt
     if currentFrame >= 6 then
         currentFrame = 1
     end
 end
-
--- function Player:draw()
-    
--- end
 
 function Player:jump()
     if self.canJump then

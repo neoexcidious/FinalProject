@@ -14,6 +14,8 @@ function love.load()
     player = Player(150, 250)
     enemy = Enemy(600, 350)
 
+    image = player.image  -- << Remove ?
+
     BucketOfFire = {}
     gameOver = false
 
@@ -37,7 +39,7 @@ function love.load()
     
     -- Create table of creatures
     creatures = {}    
-    table.insert(creatures, player)   -- Draws the whole image and runs entire animation in the corner
+    -- table.insert(creatures, player)  -- <<< Removing this removes image but animation stops working
     table.insert(creatures, enemy)
 
     -- Create separate table for walls to avoid checking collision where not needed
@@ -81,6 +83,10 @@ function love.update(dt)
     for i,v in ipairs(creatures) do
         v:update(dt)
     end
+
+    -- Update player
+    currentFrame = currentFrame + dt
+
     -- Check collision between all creatures without duplicating
     for i = 1, #creatures - 1 do
         for j = i + 1, #creatures do
@@ -166,7 +172,8 @@ function love.draw()
     for i, v in ipairs(creatures) do
         v:draw()
     end
-    love.graphics.draw(player.image, frames[math.floor(currentFrame)], player.x, player.y)
+    -- Draw player
+    love.graphics.draw(image, frames[math.floor(currentFrame)], player.x, player.y) -- Removing image errors out, not removing it shows the quad animation superimposed on the image
     -- Draw walls
     for i, v in ipairs(walls) do
         v:draw()
