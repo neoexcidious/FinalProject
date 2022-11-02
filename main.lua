@@ -37,7 +37,7 @@ function love.load()
     
     -- Create table of creatures
     creatures = {}    
-    -- table.insert(creatures, player)   <<< Drawable expected, got quad when this is on
+    table.insert(creatures, player)   -- Draws the whole image and runs entire animation in the corner
     table.insert(creatures, enemy)
 
     -- Create separate table for walls to avoid checking collision where not needed
