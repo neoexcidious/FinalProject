@@ -182,7 +182,7 @@ function love.draw()
     camera:detach()
     camera:draw()
     
-    -- If player died
+    -- Check if player died
     if gameOver then
         camera:fade(0.1, {0, 0, 0, 1})
         love.graphics.print("Game Over", (width / 2), (height / 2))

@@ -1,15 +1,34 @@
 
--- Create player from typ
 Player = Entity:extend()
 
 -- Define player attributes
-function Player:new(x, y)    
-    Player.super.new(self, x, y, "drop.png")
+function Player:new(x, y)   
+    Player.super.new(self, x, y, "spritesheet.jpg")
     self.speed = 200
     self.canJump = false
     self.strength = 10
     self.dead = false
     self.health = 1
+    
+    -- Animation requirements    
+    self.width = self.image:getWidth()
+    self.height = self.image:getHeight()
+    frames = {}
+    local frame_width = 100
+    local frame_height = 200
+    maxFrames = 5
+
+    for i = 0, 1 do
+        for j = 0, 2 do
+            table.insert(frames, love.graphics.newQuad(j * frame_width, i * frame_height, frame_width,
+                        frame_height, self.width, self.height))
+            if #frames == maxFrames then
+                break
+            end
+        end
+    end
+
+    currentFrame = 1
 end
 
 function Player:update(dt)
@@ -31,6 +50,15 @@ function Player:update(dt)
         gameOver = true
     end
 
+    -- Animation
+    currentFrame = currentFrame + 10 * dt
+    if currentFrame >= 6 then
+        currentFrame = 1
+    end
+end
+
+function Player:draw()
+    love.graphics.draw(frames[math.floor(currentFrame)])
 end
 
 function Player:jump()

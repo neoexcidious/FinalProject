@@ -25,5 +25,7 @@ Decided to keep the camera library for the fade-to-black function it has.
 Completed player collision with fire, applied fade
 Working on adding functionality to eat food. Harder to fix than expected.
 Fixed fire collision in the meantime, so it stops when it hits walls and only triggers gameOver when it hits the player.
-
+Making progress on player death conditions, working on animations now.
+Will need to print the health counter on screen and build a menu
+Have to figure out how to load quads outside of main.
 Use BFXR for sound later on ?
