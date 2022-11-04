@@ -6,14 +6,16 @@ function love.load()
     require "entity"
     require "player"
     require "walls"
-    require "enemy"
+    require "fireEnemy"
     require "fire"
     require "food"
-    require "ice"
+    require "iceEnemy"
 
     -- Initialize primary objects
     player = Player(150, 100)
-    enemy = Enemy(600, 350)
+    fireEnemy = fireEnemy(600, 350)
+    iceEnemy1 = iceEnemy(1200, 500)
+    iceEnemy2 = iceEnemy(1250, 500)
 
     BucketOfFire = {}
     gameOver = false
@@ -39,7 +41,9 @@ function love.load()
     -- Create table of creatures
     creatures = {}    
     table.insert(creatures, player)
-    table.insert(creatures, enemy)
+    table.insert(creatures, fireEnemy)
+    table.insert(creatures, iceEnemy1)
+    table.insert(creatures, iceEnemy2)
 
     image = player.image
     -- Create separate table for walls to avoid checking collision where not needed
@@ -55,8 +59,8 @@ function love.load()
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
         {1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
@@ -69,8 +73,6 @@ function love.load()
         for j, w in ipairs(v) do
             if w == 1 then
                 table.insert(walls, Wall((j-1) * 50, (i-1) * 50))
-            elseif w == 2 then
-                table.insert(walls, Ice((j-1) * 50, (i-1) * 50))
             end
         end
     end

@@ -1,8 +1,8 @@
 
-Enemy = Entity:extend()
+fireEnemy = Entity:extend()
 
-function Enemy:new(x, y)
-    Enemy.super.new(self, x, y, "cannon.jpg")
+function fireEnemy:new(x, y)
+    fireEnemy.super.new(self, x, y, "cannon.jpg")
     self.speed = 100
     self.strength = 50
     self.weight = 0
@@ -10,8 +10,8 @@ function Enemy:new(x, y)
     self.height = self.image:getHeight()
 end
 
-function Enemy:update(dt)
-    Enemy.super.update(self, dt)
+function fireEnemy:update(dt)
+    fireEnemy.super.update(self, dt)
     self.x = self.x + self.speed * dt
 
     if self.x < 500 then
