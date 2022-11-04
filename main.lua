@@ -1,6 +1,7 @@
 
 function love.load()
     -- Load components
+    lume = require "lume"
     Object = require "classic"
     Camera = require "camera"
     require "entity"
@@ -11,6 +12,8 @@ function love.load()
     require "food"
     require "iceEnemy"
 
+    gameOver = false
+
     -- Initialize primary objects
     player = Player(150, 100)
     fireEnemy = fireEnemy(600, 350)
@@ -19,14 +22,29 @@ function love.load()
 
     -- Create fire table
     BucketOfFire = {}
-    gameOver = false
 
     -- Create food table
     foodBucket = {}
-    for i = 1, 3 do
+    bucketSize = 3
+
+    for i = 1, bucketSize do
         table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 350)))
     end
 
+     -- Load savegame if applicable
+     if love.filesystem.getInfo("savedata.txt") then
+        file = love.filesystem.read("savedata.txt")
+        data = lume.deserialize(file)
+        bucketSize = #data.foodBucket
+
+        -- Load player
+        player.x = data.player.x
+        player.y = data.player.y
+        player.health = data.player.health  
+
+        bucketSize = data.bucketSize
+    end  
+    
     -- Get window dimensions
     win_width, win_height = love.graphics.getDimensions()
     
@@ -203,8 +221,7 @@ function love.draw()
 end
 
 -- Controls Mapping
-
--- Check if Menu is up
+-- check if Menu is up
 local isOn = false
 
 function love.keypressed(key)
@@ -217,5 +234,26 @@ function love.keypressed(key)
     elseif key == "escape" and isOn == true then
         camera:fade(1, {0, 0, 0, 0})
         isOn = false
+    elseif key == "f5" then
+        saveGame()
+    elseif key == "f9" then
+        love.filesystem.remove("savedata.txt")
+        love.event.quit("restart")
     end
+end
+
+-- Save Function
+
+function saveGame()
+    data = {}
+    data.player = {
+        x = player.x,
+        y = player.y,
+        health = player.health
+    }
+    
+    data.foodBucket = #foodBucket
+    
+    serialized = lume.serialize(data)
+    love.filesystem.write("savedata.txt", serialized)
 end
