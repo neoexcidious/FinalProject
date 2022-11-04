@@ -17,7 +17,8 @@ end
 function iceEnemy:checkCollision(obj)
     if iceEnemy.super.checkCollision(self, obj) then
         if obj == player then
-            player.x = player.last.x - 10
+            player.x = player.last.x - 20
+            player.y = player.last.y
             player.health = player.health - 1
         end
     end

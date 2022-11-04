@@ -2,7 +2,8 @@
 Food = Entity:extend()
 
 function Food:new(x, y)
-    self.image = love.graphics.newImage("dollar.png")  -- <<< Change picture
+    -- Edited retrieved image from Pixabay https://pixabay.com/photos/splash-water-droplet-water-drop-164963/
+    self.image = love.graphics.newImage("food2.jpg")  -- <<< Change picture
     self.x = x
     self.y = y
     self.width = self.image:getWidth()

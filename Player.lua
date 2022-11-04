@@ -4,8 +4,8 @@ Player = Entity:extend()
 
 -- Define player attributes
 function Player:new(x, y)   
-    img = "spritesheet2.jpg"
-    Player.super.new(self, x, y, img)
+    self.img = "drop.png"
+    Player.super.new(self, x, y, self.img)
     self.speed = 200
     self.canJump = false
     self.strength = 10
@@ -49,7 +49,8 @@ function Player:update(dt)
     end
     
     -- Death conditions
-    if player.health == 0 or self.y > 800 then
+    if player.health <= 0 or self.y > 800 then
+        player.health = 0
         gameOver = true
     end
 

@@ -17,13 +17,14 @@ function love.load()
     iceEnemy1 = iceEnemy(1200, 500)
     iceEnemy2 = iceEnemy(1250, 500)
 
+    -- Create fire table
     BucketOfFire = {}
     gameOver = false
 
     -- Create food table
     foodBucket = {}
-    for i = 1, 5 do
-        table.insert(foodBucket, Food(love.math.random(100, 650), love.math.random(320, 380)))
+    for i = 1, 3 do
+        table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 350)))
     end
 
     -- Get window dimensions
@@ -104,12 +105,12 @@ function love.update(dt)
                 table.remove(foodBucket, i)
             end
         end
-    end    
+    end
 
     -- Update walls
     for i,v in ipairs(walls) do
         v:update(dt)
-    end    
+    end 
 
     -- Update fire
     for i,v in ipairs(BucketOfFire) do
@@ -168,6 +169,9 @@ end
 
 
 function love.draw()
+    -- Display health counter
+    love.graphics.print("Health: ".. player.health)   
+
     camera:attach()
     -- Draw creatures
     for i, v in ipairs(creatures) do
