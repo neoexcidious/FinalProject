@@ -6,8 +6,8 @@ function Fire:new(x, y)
     self.x = x
     self.y = y
     self.speed = 400
-    self.width = self.image:getWidth()
-    self.height = self.image:getHeight()
+    self.width = self.image:getWidth() / 2
+    self.height = self.image:getHeight() / 2
     self.dead = false
 end
 

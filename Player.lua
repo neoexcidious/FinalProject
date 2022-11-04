@@ -1,40 +1,41 @@
 
 Player = Entity:extend()
 
+
 -- Define player attributes
 function Player:new(x, y)   
-    Player.super.new(self, x, y, "spritesheet2.jpg")
+    img = "spritesheet2.jpg"
+    Player.super.new(self, x, y, img)
     self.speed = 200
     self.canJump = false
     self.strength = 10
     self.dead = false
     self.health = 1
-    
+   
     -- Animation requirements    
     self.width = self.image:getWidth()
     self.height = self.image:getHeight()
     
     frames = {}
     
-    local frame_width = 90
-    local frame_height = 90
+    local frame_width = 32
+    local frame_height = 32
     maxFrames = 5
 
     for i = 0, 1 do
         for j = 0, 2 do
-            table.insert(frames, love.graphics.newQuad(j * frame_width + 20, i * frame_height, frame_width,
+            table.insert(frames, love.graphics.newQuad(j * frame_width + 10, i * frame_height, frame_width,
                         frame_height, self.width, self.height))
             if #frames == maxFrames then
                 break
             end
         end
         currentFrame = 1
-    end
-
+    end    
 end
 
 function Player:update(dt)
-    -- Allows update to last position
+    -- -- Allows update to last position
     Player.super.update(self, dt)
     -- Movement
     if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
@@ -66,6 +67,10 @@ function Player:jump()
     end
 end
 
+-- function Player:draw()
+--     love.graphics.draw(player.image, frames[math.floor(currentFrame)], player.x, player.y)
+-- end
+
 -- Allow jump
 function Player:collide(obj, direction)
     Player.super.collide(self, obj, direction)
@@ -73,3 +78,4 @@ function Player:collide(obj, direction)
         self.canJump = true
     end
 end
+

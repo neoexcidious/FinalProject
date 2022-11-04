@@ -9,12 +9,11 @@ function love.load()
     require "enemy"
     require "fire"
     require "food"
+    require "ice"
 
     -- Initialize primary objects
-    player = Player(150, 250)
+    player = Player(150, 100)
     enemy = Enemy(600, 350)
-
-    image = player.image  -- << Remove ?
 
     BucketOfFire = {}
     gameOver = false
@@ -26,7 +25,7 @@ function love.load()
     end
 
     -- Get window dimensions
-    width, height = love.graphics.getDimensions()
+    win_width, win_height = love.graphics.getDimensions()
     
     -- Set camera parameters
     camera = Camera()
@@ -39,9 +38,10 @@ function love.load()
     
     -- Create table of creatures
     creatures = {}    
-    -- table.insert(creatures, player)  -- <<< Removing this removes image but animation stops working
+    table.insert(creatures, player)
     table.insert(creatures, enemy)
 
+    image = player.image
     -- Create separate table for walls to avoid checking collision where not needed
     walls = {}
     
@@ -55,7 +55,7 @@ function love.load()
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
@@ -69,6 +69,8 @@ function love.load()
         for j, w in ipairs(v) do
             if w == 1 then
                 table.insert(walls, Wall((j-1) * 50, (i-1) * 50))
+            elseif w == 2 then
+                table.insert(walls, Ice((j-1) * 50, (i-1) * 50))
             end
         end
     end
@@ -82,11 +84,8 @@ function love.update(dt)
     -- Update creatures
     for i,v in ipairs(creatures) do
         v:update(dt)
-    end
-
-    -- Update player
-    currentFrame = currentFrame + dt
-
+    end 
+     
     -- Check collision between all creatures without duplicating
     for i = 1, #creatures - 1 do
         for j = i + 1, #creatures do
@@ -172,8 +171,7 @@ function love.draw()
     for i, v in ipairs(creatures) do
         v:draw()
     end
-    -- Draw player
-    love.graphics.draw(image, frames[math.floor(currentFrame)], player.x, player.y) -- Removing image errors out, not removing it shows the quad animation superimposed on the image
+    
     -- Draw walls
     for i, v in ipairs(walls) do
         v:draw()
@@ -186,14 +184,14 @@ function love.draw()
     for i, v in ipairs(foodBucket) do
         love.graphics.draw(v.image, v.x, v.y, 0, 1, 1, v.image:getWidth() / 2, v.image:getHeight() / 2)
     end
-    
+
     camera:detach()
     camera:draw()
     
     -- Check if player died
     if gameOver then
         camera:fade(0.1, {0, 0, 0, 1})
-        love.graphics.print("Game Over", (width / 2), (height / 2))
+        love.graphics.print("Game Over", (win_width / 2), (win_height / 2))
         return
     end
 end

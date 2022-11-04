@@ -2,7 +2,7 @@
 Enemy = Entity:extend()
 
 function Enemy:new(x, y)
-    Enemy.super.new(self, x, y, "wall.png")
+    Enemy.super.new(self, x, y, "cannon.jpg")
     self.speed = 100
     self.strength = 50
     self.weight = 0
@@ -33,7 +33,7 @@ function Enemy:update(dt)
     
     while loop do
         loop = false
-        table.insert(BucketOfFire, Fire(self.x + (self.width / 2), self.y + (self.height / 2))) 
+        table.insert(BucketOfFire, Fire(self.x + 10, self.y + 50))
         if distance <= 250 then          
             break
         end

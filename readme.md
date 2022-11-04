@@ -28,4 +28,9 @@ Fixed fire collision in the meantime, so it stops when it hits walls and only tr
 Making progress on player death conditions, working on animations now.
 Will need to print the health counter on screen and build a menu
 Have to figure out how to load quads outside of main.
+
+Learning that Lua documentation is not great. Stack Overflow has very limited answers on this language as well. For example, everyone teaches how to draw quads from a spritesheet in main, but no one explains how to make the game draw that quad properly while ensuring collision checks still work, if your code is in a different file.
+
+Had to move on from the animation for now, to keep the project going. Changed texture of fire enemy and added ice textures.
+
 Use BFXR for sound later on ?
