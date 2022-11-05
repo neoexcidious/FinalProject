@@ -16,12 +16,15 @@ function Player:new(x, y)
     self.state = "idle"
    
     -- Animation   
-    self.direction = "left"
+    direction = "left"
     
 
     frames = {}
 
     local w, h = self.texture:getDimensions()
+    local wIdle, hIdle = self.textureIdle:getDimensions()
+    self.xOffset = 30
+    self.yOffset = 38
 
     local frame_width = 60
     local frame_height = 76
@@ -29,7 +32,7 @@ function Player:new(x, y)
 
     for i =  0, 1 do
         for j = 0, 3 do
-            table.insert(frames, love.graphics.newQuad(1 + j * (frame_width + 2), 1 + i * (frame_height + 2),
+            table.insert(frames, love.graphics.newQuad(1 + j * (frame_width - 2), 1 + i * (frame_height + 2),
                         frame_width, frame_height, w, h))
             if #frames == maxFrames then
                 break
@@ -88,16 +91,21 @@ function Player:render()
 
     -- flip depending on direction
     if direction == "right" then
-        scaleX = 1
+        scaleX = 1.3
+        scaleXidle = 0.9
     else
-        scaleX = -1
+        scaleX = -1.3
+        scaleXidle = -0.9
     end
 
     -- draw sprite
     if self.state ~= "idle" then
-        love.graphics.draw(self.texture, frames[math.floor(currentFrame)], player.x, player.y, 0, 1.3, 1.1)
+        love.graphics.draw(self.texture, frames[math.floor(currentFrame)],
+                            self.x + self.xOffset, self.y + self.yOffset, 0, scaleX, 1.2,
+                            self.xOffset, self.yOffset - 2)
     else        
-        love.graphics.draw(self.textureIdle, player.x, player.y + 10, 0, 0.9, 0.9)
+        love.graphics.draw(self.textureIdle, self.x + self.yOffset, self.y + self.yOffset,
+                            0, scaleXidle, 0.9, self.xOffset, self.yOffset)
     end
 end
 
