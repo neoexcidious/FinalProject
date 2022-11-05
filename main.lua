@@ -53,7 +53,7 @@ function love.load()
     local w, h = 800, 600
     camera = Camera(w/2, h/2, w, h)
     camera:setFollowStyle("PLATFORMER")
-    camera:setDeadzone(300, h/2 - 40, w - 80, 80)
+    camera:setDeadzone(80, h/2 - 200, w - 80, 200)
     
     -- Debugging purposes only                       <<< Remove this when done
     camera.draw_deadzone = true  
@@ -223,7 +223,7 @@ function love.draw()
     -- Check if player died
     if gameOver then
         camera:fade(0.1, {0, 0, 0, 1})
-        love.graphics.print("Game Over", (win_width / 2), (win_height / 2))
+        love.graphics.print("Game Over! Press F1 to Restart", win_width / 2 - 80, (win_height / 4) + 50)
         return
     end
 end

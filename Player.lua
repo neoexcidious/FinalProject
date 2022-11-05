@@ -10,6 +10,7 @@ function Player:new(x, y)
     self.strength = 10
     self.dead = false
     self.health = 1
+    -- Texture retrieved from https://www.vectorstock.com/royalty-free-vectors/water-sprites-vectors
     self.texture = love.graphics.newImage("spritesheet.jpg")
    
     -- Animation requirements    
@@ -25,8 +26,8 @@ function Player:new(x, y)
 
     for i = 0, 1 do
         for j = 0, 2 do
-            table.insert(frames, love.graphics.newQuad(j * frame_width, (i * frame_height) - 15,
-                        frame_width, frame_height, 330, 352))
+            table.insert(frames, love.graphics.newQuad(j * frame_width - 20, (i * frame_height) - 15,
+                        frame_width, frame_height, 250, 352))
             if #frames == maxFrames then
                 break
             end
