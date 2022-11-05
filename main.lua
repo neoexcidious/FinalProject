@@ -16,7 +16,7 @@ function love.load()
 
     -- Initialize primary objects
     player = Player(150, 200)
-    fireEnemy = fireEnemy(600, 350)
+    fireEnemy = fireEnemy(600, 340)
     iceEnemy1 = iceEnemy(1200, 500)
     iceEnemy2 = iceEnemy(1250, 500)
 
@@ -41,7 +41,7 @@ function love.load()
         bucketSize = data.bucketSize
      else 
         for i = 1, bucketSize do
-            table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 350)))
+            table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 340)))
         end
     end
     
@@ -133,14 +133,18 @@ function love.update(dt)
         v:update(dt)
     end 
 
-    -- Update fire
+    -- Check for damage
     for i,v in ipairs(BucketOfFire) do
         v:update(dt)
-        v:checkCollision(player)
-        if player.dead then
-            gameOver = true
-        end        
+        v:checkCollision(player)   
       end
+
+    iceEnemy1:checkCollision(player)
+    iceEnemy2:checkCollision(player)
+
+    if player.dead then
+        gameOver = true
+    end     
 
     -- Collision checks
     local loop = true

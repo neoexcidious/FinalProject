@@ -20,6 +20,7 @@ function iceEnemy:checkCollision(obj)
             player.x = player.last.x - 20
             player.y = player.last.y
             player.health = player.health - 1
+            camera:shake(8, 1, 60)
         end
     end
 end
