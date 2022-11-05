@@ -29,8 +29,9 @@ Making progress on player death conditions, working on animations now.
 Will need to print the health counter on screen and build a menu
 Have to figure out how to load quads outside of main.
 
-Learning that Lua documentation is not great. Stack Overflow has very limited answers on this language as well. For example, everyone teaches how to draw quads from a spritesheet in main, but no one explains how to make the game draw that quad properly while ensuring collision checks still work, if your code is in a different file.
-
+Learning that Lua is not that popular. There is documentation out there, but Stack Overflow has very limited answers on this language. For example, everyone teaches how to draw quads from a spritesheet in main, but no one explains how to make the game draw that quad properly while ensuring collision checks still work and having your code in a different file.
 Had to move on from the animation for now, to keep the project going. Changed texture of fire enemy and added ice textures.
+Added food collection to increase health, health counter, and save and restart functions.
+Learned that delta time can cause issues when moving a window due to the way love.run() works. In my case, the player would fall through the map when the window was moved. Turns out there's a simple fix by hard-capping delta time.
 
 Use BFXR for sound later on ?

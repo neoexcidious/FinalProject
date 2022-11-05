@@ -53,6 +53,7 @@ function love.load()
     local w, h = 800, 600
     camera = Camera(w/2, h/2, w, h)
     camera:setFollowStyle("PLATFORMER")
+    camera:setDeadzone(300, h/2 - 40, w - 80, 80)
     
     -- Debugging purposes only                       <<< Remove this when done
     camera.draw_deadzone = true  
@@ -98,6 +99,9 @@ function love.load()
 end
 
 function love.update(dt)  
+    -- Prevents bugs called by delta time when moving the window
+    dt = math.min(dt, 0.07)
+    
     -- Update camera
     camera:update(dt)
     camera:follow(player.x, player.y)
@@ -189,6 +193,10 @@ end
 function love.draw()
     -- Display health counter
     love.graphics.print("Health: ".. player.health)   
+    love.graphics.print("Save Game: F5", 700, 0)
+    love.graphics.print("Restart: F1", 700, 20)
+    love.graphics.print("Quit: Alt + F4", 700, 40)
+
 
     camera:attach()
     -- Draw creatures

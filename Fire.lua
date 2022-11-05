@@ -26,6 +26,7 @@ function Fire:checkCollision(obj)
         if obj == player then
             player.x = player.last.x - 10
             player.health = player.health - 1
+            camera:shake(8, 1, 60)
         end
     end
 end
