@@ -10,30 +10,27 @@ function Player:new(x, y)
     self.strength = 10
     self.dead = false
     self.health = 1
-    -- Texture retrieved from https://www.vectorstock.com/royalty-free-vectors/water-sprites-vectors
-    self.texture = love.graphics.newImage("spritesheet.jpg")
+    -- Image by ddraw on Freepik "https://www.freepik.com/free-vector/animation-skeleton_1036094.htm#query=animation%20sprite&position=10&from_view=keyword"
+    self.texture = love.graphics.newImage("skeletonsheet.jpg")
+    self.textureIdle = love.graphics.newImage("idle.jpg")
     self.state = "idle"
    
     -- Animation   
     self.direction = "left"
-    self.xOffset = 8
-    self.yOffset = 16
+    
 
     frames = {}
 
-    local w, h = self.image:getDimensions()
-    print(w..","..h)
+    local w, h = self.texture:getDimensions()
 
-    self.width = 68
-    self.height = 68
-    local frame_width = 68
-    local frame_height = 68
-    maxFrames = 16
+    local frame_width = 60
+    local frame_height = 76
+    maxFrames = 5
 
-    for i =  0, 4 do
-        for j = 0, 4 do
-            table.insert(frames, love.graphics.newQuad(j * frame_width, (i * frame_height) - 15,
-                        frame_width, frame_height, 272, 272))
+    for i =  0, 1 do
+        for j = 0, 3 do
+            table.insert(frames, love.graphics.newQuad(1 + j * (frame_width + 2), 1 + i * (frame_height + 2),
+                        frame_width, frame_height, w, h))
             if #frames == maxFrames then
                 break
             end
@@ -50,10 +47,15 @@ function Player:update(dt)
     if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
         self.x = self.x - self.speed * dt
         direction = "left"
+        self.state = "walking"
     elseif love.keyboard.isDown("right") or love.keyboard.isDown("d") then
         self.x = self.x + self.speed * dt
         direction = "right"
-    end    
+        self.state = "walking"
+    else
+        self.state = "idle"
+    end
+
     -- Check if mid-air to prevent jump while falling
     if self.last.y ~= self.y then
         self.canJump = false
@@ -65,20 +67,19 @@ function Player:update(dt)
         gameOver = true
     end
 
-    -- Animation
-    currentFrame = currentFrame + 5 * dt
+    -- Animation update
+    currentFrame = currentFrame + 4 * dt
     if currentFrame >= maxFrames then
         currentFrame = 1
     end
 end
 
--- Check if falling
-
+-- If jumping
 function Player:jump()
     if self.canJump then
         self.gravity = -300
         self.canJump = false
-        self.state = "falling"
+        self.state = "idle"
     end
 end
 
@@ -93,7 +94,11 @@ function Player:render()
     end
 
     -- draw sprite
-    love.graphics.draw(self.texture, frames[math.floor(currentFrame)], player.x, player.y)
+    if self.state ~= "idle" then
+        love.graphics.draw(self.texture, frames[math.floor(currentFrame)], player.x, player.y, 0, 1.3, 1.1)
+    else        
+        love.graphics.draw(self.textureIdle, player.x, player.y + 10, 0, 0.9, 0.9)
+    end
 end
 
 
