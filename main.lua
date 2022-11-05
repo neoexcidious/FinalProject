@@ -65,7 +65,6 @@ function love.load()
     table.insert(creatures, iceEnemy1)
     table.insert(creatures, iceEnemy2)
 
-    image = player.image
     -- Create separate table for walls to avoid checking collision where not needed
     walls = {}
     
@@ -101,7 +100,7 @@ end
 function love.update(dt)  
     -- Prevents bugs called by delta time when moving the window
     dt = math.min(dt, 0.07)
-    
+
     -- Update camera
     camera:update(dt)
     camera:follow(player.x, player.y)
@@ -201,8 +200,9 @@ function love.draw()
     camera:attach()
     -- Draw creatures
     for i, v in ipairs(creatures) do
-        v:draw()
+        v:draw()       
     end
+    player:render()
     
     -- Draw walls
     for i, v in ipairs(walls) do
