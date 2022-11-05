@@ -4,12 +4,13 @@ Player = Entity:extend()
 
 -- Define player attributes
 function Player:new(x, y)
-    Player.super.new(self, x, y, "spritesheet2.jpg")
+    Player.super.new(self, x, y, "backdrop.png")
     self.speed = 200
     self.canJump = false
     self.strength = 10
     self.dead = false
     self.health = 1
+    self.texture = love.graphics.newImage("spritesheet.jpg")
    
     -- Animation requirements    
     self.direction = "left"
@@ -18,14 +19,14 @@ function Player:new(x, y)
 
     frames = {}
     
-    local frame_width = 10
-    local frame_height = 10
+    local frame_width = 88
+    local frame_height = 88
     maxFrames = 5
 
     for i = 0, 1 do
         for j = 0, 2 do
             table.insert(frames, love.graphics.newQuad(j * frame_width, i * frame_height,
-                        frame_width, frame_height, 50, 50))
+                        frame_width, frame_height, 352, 352))
             if #frames == maxFrames then
                 break
             end
@@ -82,7 +83,7 @@ function Player:render()
     end
 
     -- draw sprite
-    love.graphics.draw(self.image, frames[math.floor(currentFrame)], player.x, player.y)
+    love.graphics.draw(self.texture, frames[math.floor(currentFrame)], player.x, player.y)
 end
 
 
