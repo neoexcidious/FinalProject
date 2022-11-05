@@ -12,22 +12,28 @@ function Player:new(x, y)
     self.health = 1
     -- Texture retrieved from https://www.vectorstock.com/royalty-free-vectors/water-sprites-vectors
     self.texture = love.graphics.newImage("spritesheet.jpg")
+    self.state = "idle"
    
-    -- Animation requirements    
+    -- Animation   
     self.direction = "left"
     self.xOffset = 8
     self.yOffset = 16
 
     frames = {}
-    
-    local frame_width = 88
-    local frame_height = 88
-    maxFrames = 5
 
-    for i = 0, 1 do
-        for j = 0, 2 do
-            table.insert(frames, love.graphics.newQuad(j * frame_width - 20, (i * frame_height) - 15,
-                        frame_width, frame_height, 250, 352))
+    local w, h = self.image:getDimensions()
+    print(w..","..h)
+
+    self.width = 68
+    self.height = 68
+    local frame_width = 68
+    local frame_height = 68
+    maxFrames = 16
+
+    for i =  0, 4 do
+        for j = 0, 4 do
+            table.insert(frames, love.graphics.newQuad(j * frame_width, (i * frame_height) - 15,
+                        frame_width, frame_height, 272, 272))
             if #frames == maxFrames then
                 break
             end
@@ -61,15 +67,18 @@ function Player:update(dt)
 
     -- Animation
     currentFrame = currentFrame + 5 * dt
-    if currentFrame >= 6 then
+    if currentFrame >= maxFrames then
         currentFrame = 1
     end
 end
+
+-- Check if falling
 
 function Player:jump()
     if self.canJump then
         self.gravity = -300
         self.canJump = false
+        self.state = "falling"
     end
 end
 

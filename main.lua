@@ -15,7 +15,7 @@ function love.load()
     gameOver = false
 
     -- Initialize primary objects
-    player = Player(150, 100)
+    player = Player(150, 200)
     fireEnemy = fireEnemy(600, 350)
     iceEnemy1 = iceEnemy(1200, 500)
     iceEnemy2 = iceEnemy(1250, 500)
