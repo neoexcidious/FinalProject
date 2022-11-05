@@ -27,15 +27,11 @@ function love.load()
     foodBucket = {}
     bucketSize = 3
 
-    for i = 1, bucketSize do
-        table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 350)))
-    end
-
      -- Load savegame if applicable
      if love.filesystem.getInfo("savedata.txt") then
         file = love.filesystem.read("savedata.txt")
         data = lume.deserialize(file)
-        bucketSize = #data.foodBucket
+        bucketSize = data.foodBucket
 
         -- Load player
         player.x = data.player.x
@@ -43,7 +39,11 @@ function love.load()
         player.health = data.player.health  
 
         bucketSize = data.bucketSize
-    end  
+     else 
+        for i = 1, bucketSize do
+            table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 350)))
+        end
+    end
     
     -- Get window dimensions
     win_width, win_height = love.graphics.getDimensions()
@@ -52,7 +52,7 @@ function love.load()
     camera = Camera()
     local w, h = 800, 600
     camera = Camera(w/2, h/2, w, h)
-    camera:setDeadzone(40, h/2 - 40, w - 400, 80)
+    camera:setFollowStyle("PLATFORMER")
     
     -- Debugging purposes only                       <<< Remove this when done
     camera.draw_deadzone = true  
@@ -236,7 +236,7 @@ function love.keypressed(key)
         isOn = false
     elseif key == "f5" then
         saveGame()
-    elseif key == "f9" then
+    elseif key == "f1" then
         love.filesystem.remove("savedata.txt")
         love.event.quit("restart")
     end
