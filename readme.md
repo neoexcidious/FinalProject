@@ -34,4 +34,7 @@ Had to move on from the animation for now, to keep the project going. Changed te
 Added food collection to increase health, health counter, and save and restart functions.
 Learned that delta time can cause issues when moving a window due to the way love.run() works. In my case, the player would fall through the map when the window was moved. Turns out there's a simple fix by hard-capping delta time.
 
-Use BFXR for sound later on ?
+Finally managed to make a decent animation with offset added for direction control.
+Used BFXR to make sound effects.
+Learned how to stop updates when game is paused or over. Had to move the sound to love.update from love.draw to keep it from trying to play.
+Got free music track from itch.io

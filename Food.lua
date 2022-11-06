@@ -25,6 +25,7 @@ function Food:checkCollision(obj)
         self.eaten = true
         if obj == player then
             player.health = player.health + 1
+            foodSFX:play()
         end
     end
 end

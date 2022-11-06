@@ -16,7 +16,7 @@ function Player:new(x, y)
     self.state = "idle"
    
     -- Animation   
-    direction = "left"
+    direction = "right"
     
 
     frames = {}

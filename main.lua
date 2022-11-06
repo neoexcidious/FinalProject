@@ -12,7 +12,24 @@ function love.load()
     require "food"
     require "iceEnemy"
 
+    -- Sounds (created with BFXR)
+    jumpSFX = love.audio.newSource("sounds/jump.wav", "static")
+    flameSFX = love.audio.newSource("sounds/flame.wav", "static")
+    deathSFX = love.audio.newSource("sounds/death.wav", "static")
+    foodSFX = love.audio.newSource("sounds/food.wav", "static")
+
+    -- Free music track from Itch.io: https://svl.itch.io/rpg-music-pack-svl
+    music = love.audio.newSource("sounds/music.wav", "stream")
+    music:setLooping(true)
+    music:setVolume(0.3)
+    music:play()
+
+
+    -- set flags
     gameOver = false
+    gamePaused = false
+    timer = 0
+
 
     -- Initialize primary objects
     player = Player(150, 200)
@@ -52,8 +69,12 @@ function love.load()
     camera = Camera()
     local w, h = 800, 600
     camera = Camera(w/2, h/2, w, h)
-    camera:setFollowStyle("PLATFORMER")
-    camera:setDeadzone(80, h/2 - 200, w - 80, 200)
+    if player.x <= 200 then
+        camera:setDeadzone(400, h/2 - 40, w - 200, 80)
+    else
+        camera:setFollowStyle("PLATFORMER")
+        camera:setDeadzone(80, h/2 - 200, w - 80, 200)
+    end
     
     -- Debugging purposes only                       <<< Remove this when done
     camera.draw_deadzone = true  
@@ -70,22 +91,22 @@ function love.load()
     
     -- Create tilemap
     map = {
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
-        {1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1}  
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
+        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
+        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1},
+        {1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1}  
     }
 
     for i, v in ipairs(map) do 
@@ -100,6 +121,21 @@ end
 function love.update(dt)  
     -- Prevents bugs called by delta time when moving the window
     dt = math.min(dt, 0.07)
+
+
+    -- Play death sound
+    if gameOver then    
+        deathSFX:play()
+    end
+
+    -- Stop updates and death sound if game is paused or over
+    if gamePaused or gameOver then
+        timer = timer + dt
+        if timer > 2 then
+            deathSFX:stop()
+            return
+        end
+    end
 
     -- Update camera
     camera:update(dt)
@@ -136,8 +172,8 @@ function love.update(dt)
     -- Check for damage
     for i,v in ipairs(BucketOfFire) do
         v:update(dt)
-        v:checkCollision(player)   
-      end
+        v:checkCollision(player)
+    end
 
     iceEnemy1:checkCollision(player)
     iceEnemy2:checkCollision(player)
@@ -208,6 +244,9 @@ function love.draw()
     end
     player:render()
     
+    -- Diagnostics purposes only
+    love.graphics.print("x: ".. player.x.."  y:  "..player.y, player.x + player.width, player.y + player.height)
+    
     -- Draw walls
     for i, v in ipairs(walls) do
         v:draw()
@@ -224,10 +263,18 @@ function love.draw()
     camera:detach()
     camera:draw()
     
-    -- Check if player died
+    -- Pause
+    if gamePaused and timer >= 1 then
+        love.graphics.print("Game Paused. Press Esc to Resume.", win_width / 2 - 80, win_height / 4 + 50)
+    end
+
+
+    -- Game Over
     if gameOver then
         camera:fade(0.1, {0, 0, 0, 1})
-        love.graphics.print("Game Over! Press F1 to Restart", win_width / 2 - 80, (win_height / 4) + 50)
+        if timer >= 1 then
+            love.graphics.print("Game Over! Press F1 to Restart.", win_width / 2 - 80, (win_height / 4) + 50)
+        end
         return
     end
 end
@@ -238,16 +285,23 @@ local isOn = false
 
 function love.keypressed(key)
     -- jump function
-    if key == "up" or key == "w" then
+    if key == "up" and player.canJump == true then
         player:jump()
-    elseif key == "escape" and isOn == false then
+        jumpSFX:play()
+    -- Pause game
+    elseif key == "escape" and isOn == false and not gameOver then
         camera:fade(1, {0, 0, 0, 1})
         isOn = true
-    elseif key == "escape" and isOn == true then
+        gamePaused = true        
+    elseif key == "escape" and isOn == true and not gameOver then
         camera:fade(1, {0, 0, 0, 0})
         isOn = false
+        gamePaused = false
+        timer = 0
+    -- Save
     elseif key == "f5" then
         saveGame()
+    -- Restart
     elseif key == "f1" then
         love.filesystem.remove("savedata.txt")
         love.event.quit("restart")
