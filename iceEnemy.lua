@@ -11,15 +11,20 @@ function iceEnemy:new(x, y)
 end
 
 function iceEnemy:update(dt)
-    iceEnemy.super.update(self, dt)
+
 end
 
 function iceEnemy:checkCollision(obj)
     if iceEnemy.super.checkCollision(self, obj) then
         if obj == player then
-            player.x = player.last.x - 20
+            local push = 20 
+            if player.direction == right then
+                push = -push
+            end
+            player.x = player.last.x + push
             player.y = player.last.y
             player.health = player.health - 1
+            iceSFX:play()
             camera:shake(8, 1, 60)
         end
     end

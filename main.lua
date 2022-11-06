@@ -17,6 +17,7 @@ function love.load()
     flameSFX = love.audio.newSource("sounds/flame.wav", "static")
     deathSFX = love.audio.newSource("sounds/death.wav", "static")
     foodSFX = love.audio.newSource("sounds/food.wav", "static")
+    iceSFX = love.audio.newSource("sounds/ice.wav", "static")
 
     -- Free music track from Itch.io: https://svl.itch.io/rpg-music-pack-svl
     music = love.audio.newSource("sounds/music.wav", "stream")
@@ -92,7 +93,7 @@ function love.load()
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
-        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1},
+        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1},
         {1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -115,7 +116,7 @@ function love.update(dt)
     dt = math.min(dt, 0.07)
 
     -- Update camera parameters to account for boundaries.
-    if player.x >= 380 then
+    if player.x >= 420 then
         camera:setFollowStyle("PLATFORMER")
     else
         camera:setFollowStyle("SCREEN_BY_SCREEN")
@@ -232,8 +233,10 @@ function love.draw()
     -- Display health counter
     love.graphics.print("Health: ".. player.health)   
     love.graphics.print("Save Game: F5", 700, 0)
-    love.graphics.print("Restart: F1", 700, 20)
-    love.graphics.print("Quit: Alt + F4", 700, 40)
+    love.graphics.print("Load Game: F9", 700, 20)
+    love.graphics.print("Restart: F1", 700, 40)
+    love.graphics.print("Quit: Alt + F4", 700, 60)
+    
 
 
     camera:attach()
@@ -300,6 +303,9 @@ function love.keypressed(key)
     -- Save
     elseif key == "f5" then
         saveGame()
+    -- Load
+    elseif key == "f9" then
+        love.event.quit("restart")
     -- Restart
     elseif key == "f1" then
         love.filesystem.remove("savedata.txt")
