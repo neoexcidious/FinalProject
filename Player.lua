@@ -4,15 +4,15 @@ Player = Entity:extend()
 
 -- Define player attributes
 function Player:new(x, y)
-    Player.super.new(self, x, y, "backdrop.png")
+    Player.super.new(self, x, y, "sprites/backdrop.png")
     self.speed = 200
     self.canJump = false
     self.strength = 10
     self.dead = false
     self.health = 1
     -- Image by ddraw on Freepik "https://www.freepik.com/free-vector/animation-skeleton_1036094.htm#query=animation%20sprite&position=10&from_view=keyword"
-    self.texture = love.graphics.newImage("skeletonsheet.jpg")
-    self.textureIdle = love.graphics.newImage("idle.jpg")
+    self.texture = love.graphics.newImage("sprites/skeletonsheet.jpg")
+    self.textureIdle = love.graphics.newImage("sprites/idle.jpg")
     self.state = "idle"
    
     -- Animation   

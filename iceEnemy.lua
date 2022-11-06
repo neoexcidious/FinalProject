@@ -3,7 +3,7 @@ iceEnemy = Entity:extend()
 
 function iceEnemy:new(x, y)
     --Image by Freepik "https://www.freepik.com/free-vector/flat-snow-cap-collection_3507261.htm#page=2&query=ice&position=23&from_view=search&track=sph"
-    iceEnemy.super.new(self, x, y, "ice2.jpg")
+    iceEnemy.super.new(self, x, y, "sprites/ice2.jpg")
     self.strength = 50
     self.weight = 0
     self.width = self.image:getWidth()

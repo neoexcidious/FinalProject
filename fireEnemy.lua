@@ -2,7 +2,7 @@
 fireEnemy = Entity:extend()
 
 function fireEnemy:new(x, y)
-    fireEnemy.super.new(self, x, y, "cannon.jpg")
+    fireEnemy.super.new(self, x, y, "sprites/cannon.jpg")
     self.speed = 100
     self.strength = 50
     self.weight = 0

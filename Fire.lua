@@ -2,7 +2,7 @@
 Fire = Entity:extend()
 
 function Fire:new(x, y)
-    self.image = love.graphics.newImage("fire.jpg")
+    self.image = love.graphics.newImage("sprites/fire.jpg")
     self.x = x
     self.y = y
     self.speed = 400
