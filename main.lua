@@ -11,13 +11,17 @@ function love.load()
     require "fire"
     require "food"
     require "iceEnemy"
+    require "star"
 
     -- Sounds (created with BFXR)
     jumpSFX = love.audio.newSource("sounds/jump.wav", "static")
     flameSFX = love.audio.newSource("sounds/flame.wav", "static")
     deathSFX = love.audio.newSource("sounds/death.wav", "static")
+    winSFX = love.audio.newSource("sounds/win.wav", "static")
     foodSFX = love.audio.newSource("sounds/food.wav", "static")
     iceSFX = love.audio.newSource("sounds/ice.wav", "static")
+
+    winSFX:setVolume(0.5)
 
     -- Free music track from Itch.io: https://svl.itch.io/rpg-music-pack-svl
     music = love.audio.newSource("sounds/music.wav", "stream")
@@ -27,6 +31,7 @@ function love.load()
 
     -- set flags
     gameOver = false
+    gameWon = false
     gamePaused = false
     timer = 0
 
@@ -35,6 +40,7 @@ function love.load()
     fireEnemy = fireEnemy(600, 340)
     iceEnemy1 = iceEnemy(1200, 500)
     iceEnemy2 = iceEnemy(1250, 500)
+    star = Star(2560, 400)
 
     -- Create fire table
     BucketOfFire = {}
@@ -123,18 +129,30 @@ function love.update(dt)
         camera:setDeadzone(100, camH/2 - 25, 80, 80)
     end
 
-    -- Play death sound
-    if gameOver then    
+    -- Game Over
+    if player.dead then
+        gameOver = true
         deathSFX:play()
+    end   
+
+    if star.eaten then
+        gameWon = true
+        winSFX:play()
     end
 
     -- Stop updates and death sound if game is paused or over
-    if gamePaused or gameOver then
+    if gamePaused or gameOver or gameWon then
         timer = timer + dt
-        if timer > 2 then
+        if timer > 2 then           
             deathSFX:stop()
-            return
+            winSFX:stop()    
+            return        
         end
+    end
+
+    -- Stop music on game end
+    if gameWon or gameOver then
+        music:stop()
     end
 
     -- Update camera
@@ -164,6 +182,14 @@ function love.update(dt)
         end
     end
 
+    -- Eat star
+    star:update(dt)
+    star:checkCollision(player)
+    if star.eaten then 
+        gameWon = true
+    end
+        
+
     -- Update walls
     for i,v in ipairs(walls) do
         v:update(dt)
@@ -174,15 +200,12 @@ function love.update(dt)
         v:update(dt)
         v:checkCollision(player)
     end
-
     iceEnemy1:checkCollision(player)
     iceEnemy2:checkCollision(player)
 
-    if player.dead then
-        gameOver = true
-    end     
+     
 
-    -- Collision checks
+    -- Additional collision checks
     local loop = true
     local limit = 0
 
@@ -232,6 +255,7 @@ end
 function love.draw()
     -- Display health counter
     love.graphics.print("Health: ".. player.health)   
+    love.graphics.print("Use arrows to move and jump", 340, 0)
     love.graphics.print("Save Game: F5", 700, 0)
     love.graphics.print("Load Game: F9", 700, 20)
     love.graphics.print("Restart: F1", 700, 40)
@@ -262,6 +286,9 @@ function love.draw()
         love.graphics.draw(v.image, v.x, v.y, 0, 1, 1, v.image:getWidth() / 2, v.image:getHeight() / 2)
     end
 
+    -- Draw star
+    star:draw()
+
     camera:detach()
     camera:draw()
     
@@ -270,7 +297,6 @@ function love.draw()
         love.graphics.print("Game Paused. Press Esc to Resume.", win_width / 2 - 80, win_height / 4 + 50)
     end
 
-
     -- Game Over
     if gameOver then
         camera:fade(0.1, {0, 0, 0, 1})
@@ -278,6 +304,14 @@ function love.draw()
             love.graphics.print("Game Over! Press F1 to Restart.", win_width / 2 - 80, (win_height / 4) + 50)
         end
         return
+    end
+
+    -- Game Won
+    if gameWon then
+        camera:fade(0.1, {0, 0, 0, 1})
+        if timer >= 1 then
+            love.graphics.print("You've Won! Press F1 to Restart.", win_width / 2 - 80, (win_height / 4) + 50)
+        end
     end
 end
 
@@ -328,3 +362,4 @@ function saveGame()
     serialized = lume.serialize(data)
     love.filesystem.write("savedata.txt", serialized)
 end
+
