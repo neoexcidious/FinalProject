@@ -63,7 +63,7 @@ function love.load()
         bucketSize = data.bucketSize
      else 
         for i = 1, bucketSize do
-            table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 340)))
+            table.insert(foodBucket, Food(love.math.random(150, 1800), love.math.random(300, 350)))
         end
     end
     
@@ -73,11 +73,8 @@ function love.load()
     -- Set camera parameters
     camera = Camera()
     camW, camH = 800, 600    
-    camera = Camera(camW/2, camH/2, camW, camH)
-    
-    -- Debugging purposes only                       <<< Remove this when done
-    camera.draw_deadzone = true  
-    
+    camera = Camera(camW/2, camH/2, camW, camH)    
+   
     -- Create table of creatures
     creatures = {}    
     table.insert(creatures, player)
@@ -99,7 +96,7 @@ function love.load()
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
         {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
-        {1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1},
+        {1,1,1,0,0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1},
         {1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -122,7 +119,7 @@ function love.update(dt)
     dt = math.min(dt, 0.07)
 
     -- Update camera parameters to account for boundaries.
-    if player.x >= 420 then
+    if player.x >= 370 then
         camera:setFollowStyle("PLATFORMER")
     else
         camera:setFollowStyle("SCREEN_BY_SCREEN")
@@ -131,8 +128,8 @@ function love.update(dt)
 
     -- Game Over
     if player.dead then
-        gameOver = true
         deathSFX:play()
+        gameOver = true        
     end   
 
     if star.eaten then
@@ -143,7 +140,9 @@ function love.update(dt)
     -- Stop updates and death sound if game is paused or over
     if gamePaused or gameOver or gameWon then
         timer = timer + dt
-        if timer > 2 then           
+        if gamePaused and timer > 0.5 then
+            return
+        elseif gameOver and timer > 2 or gameWon and timer > 2 then           
             deathSFX:stop()
             winSFX:stop()    
             return        
@@ -260,6 +259,8 @@ function love.draw()
     love.graphics.print("Load Game: F9", 700, 20)
     love.graphics.print("Restart: F1", 700, 40)
     love.graphics.print("Quit: Alt + F4", 700, 60)
+    love.graphics.print("Pause: Esc", 700, 80)
+
     
 
 
@@ -269,10 +270,7 @@ function love.draw()
         v:draw()       
     end
     player:render()
-    
-    -- Diagnostics purposes only
-    love.graphics.print("x: ".. player.x.."  y:  "..player.y, player.x + player.width, player.y + player.height)
-    
+        
     -- Draw walls
     for i, v in ipairs(walls) do
         v:draw()
@@ -292,14 +290,14 @@ function love.draw()
     camera:detach()
     camera:draw()
     
-    -- Pause
-    if gamePaused and timer >= 1 then
+    -- Game Paused
+    if gamePaused and timer >= 0.1 then
         love.graphics.print("Game Paused. Press Esc to Resume.", win_width / 2 - 80, win_height / 4 + 50)
     end
 
     -- Game Over
     if gameOver then
-        camera:fade(0.1, {0, 0, 0, 1})
+        camera:fade(0.2, {0, 0, 0, 1})
         if timer >= 1 then
             love.graphics.print("Game Over! Press F1 to Restart.", win_width / 2 - 80, (win_height / 4) + 50)
         end
@@ -308,7 +306,7 @@ function love.draw()
 
     -- Game Won
     if gameWon then
-        camera:fade(0.1, {0, 0, 0, 1})
+        camera:fade(0.2, {0, 0, 0, 1})
         if timer >= 1 then
             love.graphics.print("You've Won! Press F1 to Restart.", win_width / 2 - 80, (win_height / 4) + 50)
         end
@@ -326,11 +324,11 @@ function love.keypressed(key)
         jumpSFX:play()
     -- Pause game
     elseif key == "escape" and isOn == false and not gameOver then
-        camera:fade(1, {0, 0, 0, 1})
+        camera:fade(0.1, {0, 0, 0, 1})
         isOn = true
         gamePaused = true        
     elseif key == "escape" and isOn == true and not gameOver then
-        camera:fade(1, {0, 0, 0, 0})
+        camera:fade(0.1, {0, 0, 0, 0})
         isOn = false
         gamePaused = false
         timer = 0

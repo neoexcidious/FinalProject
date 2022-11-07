@@ -66,6 +66,7 @@ function Player:update(dt)
     -- Death conditions
     if player.health <= 0 or self.y > 800 then
         player.health = 0
+        player.dead = true
         gameOver = true
     end
 

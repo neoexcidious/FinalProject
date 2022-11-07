@@ -18,10 +18,11 @@ function iceEnemy:checkCollision(obj)
     if iceEnemy.super.checkCollision(self, obj) then
         if obj == player then
             local push = 20 
-            if player.direction == right then
+            if player.x > self.x then
                 push = -push
             end
-            player.x = player.last.x + push
+
+            player.x = player.last.x - push
             player.y = player.last.y
             player.health = player.health - 1
             iceSFX:play()

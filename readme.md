@@ -38,3 +38,5 @@ Finally managed to make a decent animation with offset added for direction contr
 Used BFXR to make sound effects.
 Learned how to stop updates when game is paused or over. Had to move the sound to love.update from love.draw to keep it from trying to play.
 Got free music track from itch.io
+Made some new sounds and got new images from Pixabay.
+Game is nearly complete, just have to fix the size of the player

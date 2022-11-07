@@ -26,6 +26,8 @@ function Food:checkCollision(obj)
         if obj == player then
             player.health = player.health + 1
             foodSFX:play()
+        elseif obj == food then
+            self.x = self.x - 5
         end
     end
 end
