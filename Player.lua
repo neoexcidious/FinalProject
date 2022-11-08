@@ -11,8 +11,8 @@ function Player:new(x, y)
     self.dead = false
     self.health = 1
     -- Image by ddraw on Freepik "https://www.freepik.com/free-vector/animation-skeleton_1036094.htm#query=animation%20sprite&position=10&from_view=keyword"
-    self.texture = love.graphics.newImage("sprites/skeletonsheet.jpg")
-    self.textureIdle = love.graphics.newImage("sprites/idle.jpg")
+    self.texture = love.graphics.newImage("sprites/spritesheet.png")
+    self.textureIdle = love.graphics.newImage("sprites/idle.png")
     self.state = "idle"
    
     -- Animation   
