@@ -2,6 +2,7 @@
 Fire = Entity:extend()
 
 function Fire:new(x, y)
+    -- Edited image retrieved from Pixabay https://pixabay.com/illustrations/fireball-fire-explosion-flames-422746/
     self.image = love.graphics.newImage("sprites/fire.jpg")
     self.x = x
     self.y = y

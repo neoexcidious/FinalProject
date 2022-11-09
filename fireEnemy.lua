@@ -2,6 +2,7 @@
 fireEnemy = Entity:extend()
 
 function fireEnemy:new(x, y)
+    -- Edited retrieved image from itch.io https://jpcu.itch.io/2d-isometric-pipes
     fireEnemy.super.new(self, x, y, "sprites/cannon.jpg")
     self.speed = 100
     self.strength = 50

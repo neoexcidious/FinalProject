@@ -21,6 +21,7 @@ function love.load()
     foodSFX = love.audio.newSource("sounds/food.wav", "static")
     iceSFX = love.audio.newSource("sounds/ice.wav", "static")
 
+    -- Prevent ear bleeds
     winSFX:setVolume(0.5)
 
     -- Free music track from Itch.io: https://svl.itch.io/rpg-music-pack-svl
@@ -29,7 +30,7 @@ function love.load()
     music:setVolume(0.15)
     music:play()
 
-    -- set flags
+    -- Set flags
     gameOver = false
     gameWon = false
     gamePaused = false
